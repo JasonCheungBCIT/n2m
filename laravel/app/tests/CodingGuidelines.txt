@@ -1,0 +1,26 @@
+For this project, the coding guidelines are as follows.
+
+1. Accessing views vs calling controller functions.
+    - When accessing or redirecting towards a view (a file in a directory):
+        Syntax: "folder/file"
+    - When calling a method from a controller:
+        Syntax: "controller.action"
+    - These rules apply whether you're using Redirect or View class.
+        ex. Redirect::to or View::make
+    Rationale:
+        Inflating a view is directly accesing a file within some directory,
+        while using routes is much like calling a method in a object/class.
+
+2. Calling/Redirecting to another method in controllers.
+    - When calling another method in the same controller:
+        Syntax: Redirect::action(NameofController@methodName)
+    - When calling another method in another controller, try to use set-up routes:
+        Ex. Redirect::to('predefined_route');
+    Rationale:
+        When calling another function inside the same class, there's not reason to go
+        a roundabout way; Be explicit and simple.
+        When calling another method in another class, we want to be as modular and
+        abstract as possible; We don't want to know any internals or specifics.
+
+3. Naming conventions
+    - kill me now.

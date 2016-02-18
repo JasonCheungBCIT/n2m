@@ -1,0 +1,100 @@
+body {
+    font: 1em Verdana, Arial, Helvetica, sans-serif;
+    /*background: #ccc;*/
+    color: #000;
+    text-align: center; /* Centers the container */
+    margin: 0;
+    padding: 0;
+}
+
+div > textarea {
+    resize: none;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    /* overflow property must not be 'visible' for this to work */
+}
+
+#header, #column1, #column2, #column3, #column4 ,#footer{
+    padding: 10px;  /* This sets a 10px padding on all of our content boxes */
+}
+
+#wrapper {
+    width: 830px; /* 780px is just wide enough to fill and 800px screen */
+    margin: 0 auto; /* It's important to set the margin to auto if you want the layout to center */
+    background: #fff;
+    text-align: left;
+    border: 1px solid #999;
+}
+
+#main_content {
+    display: flex;
+}
+
+#header {
+    /*    background: #999;*/
+    text-align:center;
+    border-style:solid;
+    border-color:#ccc;
+    border-width:1px;
+    margin: 0;
+    padding: 10px;
+}
+
+.column {
+    flex: 1;
+    /*width: 25%;  Surprisingly works, kinda hacky */
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+    margin: 5px;
+}
+
+/*
+#section1 {
+    float: left; /* Sets this section to the left
+    background: #fff;
+    width: 385px;
+}
+*/
+
+/*
+#column1 {
+    border-style:solid;
+    border-color:#ccc;
+    border-width:1px;
+}
+
+#column2 {
+    border-style:solid;
+    border-color:#ccc;
+    border-width:1px;
+}
+
+#section2 {
+    background: #fff;
+    width: auto;
+}
+
+#column3 {
+    border-style:solid;
+    border-color:#ccc;
+    border-width:1px;
+}
+
+#column4 {
+    border-style:solid;
+    border-color:#ccc;
+    border-width:1px;
+}
+*/
+#footer {
+    /*    background: #999;*/
+    border-style:solid;
+    border-color:#ccc;
+    border-width:1px;
+    clear: both;
+    text-align:center;
+}
+
+
