@@ -27,7 +27,9 @@
         {{Form::password('password_confirmation')}}
         {{$errors->first('password_confirmation', '<span class="error">:message<span>')}}
     </div>
+
     <div class="g-recaptcha" data-sitekey="6LetOBgTAAAAAIHZSMLj3ytAS7VE-zDSOeDUA1id"></div>
+
     <div>
         {{Form::submit('Register')}}
     </div>

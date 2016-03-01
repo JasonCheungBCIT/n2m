@@ -115,6 +115,7 @@ class NotesController extends \BaseController {
 			}
 		}
 
+
 		// Update image (1:M but only one upload at a time)
 		if (Input::hasFile('user_image')) {
 			$imageInstance = Input::file('user_image');

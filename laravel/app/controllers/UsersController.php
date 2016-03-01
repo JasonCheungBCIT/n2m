@@ -81,7 +81,7 @@ class UsersController extends \BaseController {
         $this->user->save();
 
 		/* Send confirmation email */
-		Mail::send('users/verify', array('confirmation_code'=>$confirmation_code), function($message) {
+		Mail::send('users/verify_email', array('confirmation_code'=>$confirmation_code), function($message) {
 			$message->to(Input::get('email'), "New user")->subject('Welcome to NotesToMyself');
 		});
 
@@ -93,8 +93,6 @@ class UsersController extends \BaseController {
 	}
 
 	public function confirm($confirmation_code) {
-
-
 		// If no confirmation code inputted
 		if (!$confirmation_code) {
 			dd("No confirmation code detected");
@@ -119,6 +117,72 @@ class UsersController extends \BaseController {
 		$user->save();
 
 		return View::make('users/verified');
+	}
+
+	public function sendPasswordChange() {
+
+		// Validate input
+		$v = Validator::make(Input::all(), ['email'=>'required|email']);
+
+		if (!($v->passes())) {
+			return Redirect::back()->withInput()->withErrors($v->messages());
+		}
+		// Find email
+		$user = User::whereEmail(Input::get('email'))->first();
+
+		if (!$user) {
+			dd("No matching email found. In deployment this won't be shown");
+		}
+
+		// Assign a password code (for resetting password)
+		$password_code = str_random(30);
+		$user->password_code = $password_code;
+		$user->save();
+
+		// Send the email
+		Mail::send('users/password_email', array('password_code'=>$password_code), function($message) {
+			$message->to(Input::get('email'), "Change password")->subject('Change Notes to Myself password');
+		});
+
+	}
+
+	public function checkPasswordCode($password_code) {
+		// If no confirmation code inputted
+		if (!$password_code) {
+			dd("No password code detected");
+			// throw new InvalidConfirmationCodeException;
+		}
+		// Find the first user with the password code
+		$user = User::wherePasswordCode($password_code)->first();
+
+		// If no user found
+		if (!$user) {
+			dd("Password code invalid");
+			// throw new InvalidConfirmationCodeException;
+		}
+
+		return View::make('users/password_change')
+			->with('p_code', $password_code);
+	}
+
+	public function changePassword() {
+		// Validate input
+		$v = Validator::make(Input::all(), ['password'=>'required|confirmed|min:6']);
+		if (!($v->passes())) {
+			dd("fuck");
+			return Redirect::back()->withInput()->withErrors($v->messages);
+		}
+
+		// Find the first user with the password code
+		$user = User::wherePasswordCode(Input::get('p_code'))->first();
+		if (!$user) {
+			dd("Password code failed .... ? Did you change it manually or was the account deleted?");
+		}
+
+		$user->password = Hash::make(Input::get('password'));
+		$user->password_code = null;
+		$user->save();
+		return "Successfully changed password";
 	}
 
 

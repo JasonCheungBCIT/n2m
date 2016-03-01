@@ -11,47 +11,16 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
-
 Route::resource('users', 'UsersController');
-
 Route::resource('sessions', 'SessionsController');
-
 Route::resource('notes', 'NotesController');
-
-/* ????
-Route::delete('delete/{id}', array(
-	'uses' => 'UsersController',
-	'as' =>
-));
-*/
+Route::post('sendPwEmail', 'UsersController@sendPasswordChange');
+Route::post('changePw', 'UsersController@changePassword');
 
 Route::get('mynotes', 'NotesController@create');
+Route::get('login',   'SessionsController@create');
+Route::get('logout',  'SessionsController@destroy');
 
-Route::get('login', 'SessionsController@create');
-Route::get('logout', 'SessionsController@destroy');
-
-Route::get('logout', 'SessionsController@destroy');
-
-Route::get('d/{id}', "UsersController@destroy");	// this works
-
-Route::get('deleteMostRecent', function() {
-	$user = User::first();
-	$user->delete();
-	return "Successfully deleted most recent record";
-});
-
-// Test route
-Route::get('email', function() {
-	Mail::send('users/verify', array('firstname'=>'Jay-Dog Cheung'), function($message) {
-		$message->to('jayson.cheung@hotmail.com', 'Jason Cheung')->subject('Welcome to n2m');
-	});
-});
-
-// Debug route
 Route::get('register', function() {
 	return View::make('users/create');
 });
@@ -62,7 +31,32 @@ Route::get('register/verify/{confirmationCode}', [
 	'uses' => 'UsersController@confirm'
 ]);
 
-// routes.php
+Route::get('forgot_password', function() {
+	return View::make('users/forgot_password');
+});
+
+Route::get('user/check_password_code/{passwordCode}', [
+	'as' => 'password_code',
+	'uses' => 'UsersController@checkPasswordCode'
+]);
+
+
+
+/* --- Debug scripts --- */
+Route::get('d/{id}', "UsersController@destroy");	// this works
+
+Route::get('deleteMostRecent', function() {
+	$user = User::first();
+	$user->delete();
+	return "Successfully deleted most recent record";
+});
+
+Route::get('test_email', function() {
+	Mail::send('Content', array('firstname'=>'Jason', 'lastname'=>'Cheung', function($message) {
+		$message->to('jayson.cheung@hotmail.com', 'Jason Cheung')->subject('Testing email');
+	}));
+});
+
 Route::get("testdb", function()
 {
 
@@ -102,4 +96,9 @@ Route::get('testimage', function() {
 
 	return $img->response();
 		//$img->response();
+});
+
+Route::get('/', function()
+{
+	return View::make('hello');
 });

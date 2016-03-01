@@ -32,7 +32,7 @@ class AddImagesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('sites');
+		Schema::drop('images');
 	}
 
 }
