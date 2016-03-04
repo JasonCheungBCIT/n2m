@@ -21,6 +21,11 @@ Route::get('mynotes', 'NotesController@create');
 Route::get('login',   'SessionsController@create');
 Route::get('logout',  'SessionsController@destroy');
 
+Route::get('/', function()
+{
+	return Redirect::to('mynotes');
+});
+
 Route::get('register', function() {
 	return View::make('users/create');
 });
@@ -98,7 +103,3 @@ Route::get('testimage', function() {
 		//$img->response();
 });
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});

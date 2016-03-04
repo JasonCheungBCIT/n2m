@@ -108,7 +108,9 @@ class NotesController extends \BaseController {
 		$oldImages = Input::get('delete_image');
 		if (isset($oldImages)) {
 			foreach ($oldImages as $path) {
-				DB::table('images')
+				// dd($path);
+				File::delete('public/' . $path);	// Delete from storage
+				DB::table('images')		// Delete from DB
 					->where('user_id', $user->id)
 					->where('path', $path)
 					->delete();
@@ -131,13 +133,22 @@ class NotesController extends \BaseController {
 				// Public can't be here or we can't access the image properly
 				$rand_path = '/images/' . str_random(20) . '.' . Input::file('user_image')->getClientOriginalExtension();
 
-				// Resize, and save our image
+				// Resize image
 				$imageInstance  = Image::make($imageInstance); // convert into intervention image
-				$imageInstance->resize(160, null, function($constraint) {
-					$constraint->aspectRatio();		// resize image, bounded by height
-				});
-				$imageInstance->save("public" . $rand_path);
+				if ($imageInstance->width() > $imageInstance->height()) {
+					// Wider than tall, bounded by width.
+					$imageInstance->resize(150, null, function($constraint) {
+						$constraint->aspectRatio();		// resize image, bounded by height
+					});
+				} else {
+					// Taller than wide, bounded by height.
+					$imageInstance->resize(null, 150, function($constraint) {
+						$constraint->aspectRatio();
+					});
+				}
 
+				// Save to storage
+				$imageInstance->save("public" . $rand_path);
 				// Save the path to the database
 				$userImage->path = $rand_path;
 				$userImage->save();
