@@ -53,9 +53,7 @@ class UsersController extends \BaseController {
 		$recaptcha = new \ReCaptcha\ReCaptcha($secret);
 		// $resp = $recaptcha->verify(Input::get('g-recaptcha-response', $_SERVER['REMOTE_ADDR']));
 		$resp = $recaptcha->verify(Input::get('g-recaptcha-response'));
-		if ($resp->isSuccess()) {
-			echo "ReCaptcha success";
-		} else {
+		if (!($resp->isSuccess())) {
 			echo "<h2>ReCaptcha failure</h2>";
 			foreach ($resp->getErrorCodes() as $code) {
 				echo '<p>' . $code . '</p>';
@@ -81,15 +79,12 @@ class UsersController extends \BaseController {
         $this->user->save();
 
 		/* Send confirmation email */
+		// todo: do this async
 		Mail::send('users/verify_email', array('confirmation_code'=>$confirmation_code), function($message) {
 			$message->to(Input::get('email'), "New user")->subject('Welcome to NotesToMyself');
 		});
 
-		// What's this1?!?!??! It's an external package!
-		//	Flash::message('Thanks for signing up! Please check your email for the confirmation code.');
-
-		return 'good stuff';
-		// return Redirect::home(); // Whats this!?
+		return Redirect::home(); // Whats this!?
 	}
 
 	public function confirm($confirmation_code) {

@@ -21,8 +21,7 @@ Route::get('mynotes', 'NotesController@create');
 Route::get('login',   'SessionsController@create');
 Route::get('logout',  'SessionsController@destroy');
 
-Route::get('/', function()
-{
+Route::get('/', function() {
 	return Redirect::to('mynotes');
 });
 
@@ -36,8 +35,8 @@ Route::get('register/verify/{confirmationCode}', [
 	'uses' => 'UsersController@confirm'
 ]);
 
-Route::get('forgot_password', function() {
-	return View::make('users/forgot_password');
+Route::get('forgotPassword', function() {
+	return View::make('users/forgotPassword');
 });
 
 Route::get('user/check_password_code/{passwordCode}', [
