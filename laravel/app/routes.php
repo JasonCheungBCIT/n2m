@@ -36,7 +36,7 @@ Route::get('register/verify/{confirmationCode}', [
 ]);
 
 Route::get('forgotPassword', function() {
-	return View::make('users/forgotPassword');
+	return View::make('users/forgot_password');
 });
 
 Route::get('user/check_password_code/{passwordCode}', [

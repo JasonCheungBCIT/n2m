@@ -80,19 +80,21 @@ class UsersController extends \BaseController {
 
 		/* Send confirmation email */
 		// todo: do this async
-		Mail::send('users/verify_email', array('confirmation_code'=>$confirmation_code), function($message) {
+		Mail::send('emails/verify_account', array('confirmation_code'=>$confirmation_code), function($message) {
 			$message->to(Input::get('email'), "New user")->subject('Welcome to NotesToMyself');
 		});
 
-		return Redirect::home(); // Whats this!?
+		return Redirect::to('login'); // Whats this!?
 	}
 
 	public function confirm($confirmation_code) {
+		/* NOT NEEDED - no arguments = route not usable (qualified)
 		// If no confirmation code inputted
 		if (!$confirmation_code) {
-			dd("No confirmation code detected");
-			// throw new InvalidConfirmationCodeException;
+			return View::make('users/verified')
+				->with('message', "<p>Confirmation code invalid.</p>");
 		}
+		*/
 
 		// Find the first user with the confirmation code
 		/*
@@ -100,10 +102,11 @@ class UsersController extends \BaseController {
 		 */
 		$user = User::whereConfirmationCode($confirmation_code)->first();
 
+
 		// If no user found
 		if (!$user) {
-			dd("Confirmation code invalid");
-			// throw new InvalidConfirmationCodeException;
+			return View::make('users/verified')
+				->with('message', "<p>Confirmation code invalid.</p>");
 		}
 
 		// Whoa....
@@ -111,7 +114,11 @@ class UsersController extends \BaseController {
 		$user->confirmation_code = null;
 		$user->save();
 
-		return View::make('users/verified');
+		return View::make('generic')
+			->with('title', "Account Verified")
+			->with('header', "Account Verified")
+			->with('message', "<p>Thanks for registering, you can now login.</p>
+							   <button type='button' onclick=\"window.location='/login'\">Login</button>");
 	}
 
 	public function sendPasswordChange() {
@@ -135,10 +142,15 @@ class UsersController extends \BaseController {
 		$user->save();
 
 		// Send the email
-		Mail::send('users/password_email', array('password_code'=>$password_code), function($message) {
+		Mail::send('emails/change_password', array('password_code'=>$password_code), function($message) {
 			$message->to(Input::get('email'), "Change password")->subject('Change Notes to Myself password');
 		});
 
+		return View::make('generic')
+			->with('title', "Password Reset")
+			->with('header', "Email Sent")
+			->with('message', "<p>A password reset email has been sent to your email.</p>
+							   <button type='button' onclick=\"window.location='/login'\">Login</button>");
 	}
 
 	public function checkPasswordCode($password_code) {
@@ -164,7 +176,6 @@ class UsersController extends \BaseController {
 		// Validate input
 		$v = Validator::make(Input::all(), ['password'=>'required|confirmed|min:6']);
 		if (!($v->passes())) {
-			dd("fuck");
 			return Redirect::back()->withInput()->withErrors($v->messages);
 		}
 
@@ -177,7 +188,11 @@ class UsersController extends \BaseController {
 		$user->password = Hash::make(Input::get('password'));
 		$user->password_code = null;
 		$user->save();
-		return "Successfully changed password";
+		return View::make('generic')
+			->with('title', "Password Reset")
+			->with('header', "Password Changed")
+			->with('message', "<p>Your password has been successfully changed.</p>
+							   <button type='button' onclick=\"window.location='/login'\">Login</button>");
 	}
 
 

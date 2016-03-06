@@ -1,0 +1,43 @@
+/* <link rel="stylesheet" media="screen and (min-device-width: 800px)" href="800.css" /> */
+
+/* Basic styling */
+body {
+    font: 1em Verdana, Arial, Helvetica, sans-serif;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+#main-content-wrapper {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center-children {
+    text-align: center;
+}
+
+a {
+    margin-top: 5px;
+    display: block;
+    font-size: 0.7em;
+}
+
+/* Form styling */
+label {
+    display: inline-block;
+    width: 40%;
+}
+input {
+    width: 55%;
+}
+
+.error {
+    font-size: 0.7em;
+    color: red;
+}
+
+.buttons {
+    width: 40%;
+}

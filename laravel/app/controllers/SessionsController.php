@@ -40,7 +40,7 @@ class SessionsController extends \BaseController {
 		/* Validate input */
 		// Note: No session model
 		$rules = [
-			'email'    => 'required|exists:users',
+			'email'    => 'required',	// should change exists:users
 			'password' => 'required'
 		];
 
@@ -65,7 +65,7 @@ class SessionsController extends \BaseController {
 			return Redirect::back()
 				->withInput()
 				->withErrors([
-					'credentials' => "Unable to sign you in, please check if you have confirmed your email."
+					'credentials' => "Invalid email-password combination."
 				]);
 			// We just added our own custom error message by implicitly create a
 			// new MessageBag = ['name' => 'message'];
