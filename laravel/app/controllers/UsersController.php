@@ -105,8 +105,10 @@ class UsersController extends \BaseController {
 
 		// If no user found
 		if (!$user) {
-			return View::make('users/verified')
-				->with('message', "<p>Confirmation code invalid.</p>");
+			return View::make('generic')
+				->with('title', "Account Verification")
+				->with('header', "Invalid Confirmation Code")
+				->with('message', "<p>This confirmation code is invalid.</p>");
 		}
 
 		// Whoa....
@@ -115,7 +117,7 @@ class UsersController extends \BaseController {
 		$user->save();
 
 		return View::make('generic')
-			->with('title', "Account Verified")
+			->with('title', "Account Verification")
 			->with('header', "Account Verified")
 			->with('message', "<p>Thanks for registering, you can now login.</p>
 							   <button type='button' onclick=\"window.location='/login'\">Login</button>");
