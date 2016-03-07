@@ -17,8 +17,7 @@ class UserImage extends Eloquent implements UserInterface, RemindableInterface {
 
     public static $rules = [
         'user_id' => 'required|Integer',
-        'path'   => 'required|image|max:10000'    // Note: Initially set to an Image for validation (later replaced by a path)
-                                                  // Note: max:10000 = 10Mb
+        'path'   => 'required|unique:images,path'
     ];
 
     public function isValid() {

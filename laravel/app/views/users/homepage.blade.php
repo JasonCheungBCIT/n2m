@@ -6,13 +6,19 @@
 
 @section('headers')
     {{ HTML::style('css/homepage.css') }}
+    <script type="text/javascript">
+        function openInNew(textbox){
+            window.open(textbox.value);
+            this.blur();
+        }
+    </script>
 @stop
 
 @section('maincontent')
 
     <div id="wrapper">
-        {{Form::open(['route'=>'notes.store', 'files'=>true])}}
-            <h2 id="header">jayson.cheung@hotmail.com - <span><a href= {{ url('logout') }}>Log out</a></span></h2>
+        {{Form::open(['route'=>'notes.store', 'files'=>true, 'method'=>'post'])}}
+            <h2 id="header">{{ $email }} - <span><a href= {{ url('logout') }}>Log out</a></span></h2>
 
             <div id="main_content">
 
@@ -24,7 +30,7 @@
                 <div id="column2" class="column">
                     <h2>Websites</h2><h3>click to open</h3>
                     @foreach ($sites as $s)
-                        {{ Form::text('websites[]', $s) }}
+                        {{ Form::text('websites[]', $s, array("onclick"=>"openInNew(this)")) }}
                     @endforeach
                     @for ($i = 0; $i < 4; $i++)
                         {{ Form::text('websites[]') }}

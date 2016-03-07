@@ -46,6 +46,7 @@ class NotesController extends \BaseController {
 			}
 
 			return View::make('users/homepage')
+					->with('email', $userData->email)
 					->with('note', $userData->note)
 					->with('todo', $userData->todo)
 					->with('image', $userData->image)
@@ -117,24 +118,37 @@ class NotesController extends \BaseController {
 			}
 		}
 
-
 		// Update image (1:M but only one upload at a time)
+		/* Warning! Because the code is structured this way, it saves everything despite if the image fails
+			(which is good), but does so in an informal hacky way (just putting it last)  */
 		if (Input::hasFile('user_image')) {
-			$imageInstance = Input::file('user_image');
+
+			// Check valid image file
+			$file = Input::file('user_image');
+			$v = Validator::make(Input::all(), ["user_image"=>"required|image|max:5000"]);	// Be wary of server file limitations
+			if (!($v->passes())) {
+				return View::make('generic')
+					->with('title', "Error Saving Notes")
+					->with('header', "Invalid Image")
+					->with('message', "<p>Not a supported image file or file size too large (<5MB).</p>
+							   <button type='button' onclick=\"window.location='/mynotes'\">Return</button>");
+			}
+
+			//// Assemble UserImage object
+			// create random file name (to avoid collision)
+			// Public can't be here or we can't access the image properly
+			$rand_path = '/images/' . str_random(20) . '.' . Input::file('user_image')->getClientOriginalExtension();
+
 			$userImage = new UserImage;
 			$userImage->user_id = Auth::user()->id;
-			$userImage->path	= $imageInstance;
-			// $userImage->path->move('/public/images/catalog/', 'test.jpg');
+			$userImage->path 	= $rand_path;
 
-			// dd(Input::file('user_image'));
 			if ($userImage->isValid()) {
-
-				// create random file name (to avoid collision)
-				// Public can't be here or we can't access the image properly
-				$rand_path = '/images/' . str_random(20) . '.' . Input::file('user_image')->getClientOriginalExtension();
+				// UserImage record is usable, begin saving image and data.
 
 				// Resize image
-				$imageInstance  = Image::make($imageInstance); // convert into intervention image
+				$imageInstance  = Image::make($file); // convert into intervention image
+
 				if ($imageInstance->width() > $imageInstance->height()) {
 					// Wider than tall, bounded by width.
 					$imageInstance->resize(150, null, function($constraint) {
@@ -149,16 +163,18 @@ class NotesController extends \BaseController {
 
 				// Save to storage
 				$imageInstance->save("public" . $rand_path);
-				// Save the path to the database
-				$userImage->path = $rand_path;
+
+				// Save to database
 				$userImage->save();
 
 			} else {
-				dd("failed to upload image");
-				// should display a "not a valid image"
+				return View::make('generic')
+					->with('title', "Error Saving Notes")
+					->with('header', "Sorry!")
+					->with('message', "<p>Server error in saving image, please try again.</p>
+							   <button type='button' onclick=\"window.location='/mynotes'\">Try again</button>");				// should display a "not a valid image"
 			}
 		}
-
 
 		return Redirect::action("NotesController@create");
 	}
