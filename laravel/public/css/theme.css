@@ -30,7 +30,7 @@ label {
     width: 40%;
 }
 input {
-    width: 55%;
+    width: 50%;
 }
 
 .error {
@@ -40,4 +40,10 @@ input {
 
 .buttons {
     width: 40%;
+}
+
+.indicator {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
 }

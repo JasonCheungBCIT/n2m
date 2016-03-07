@@ -84,7 +84,11 @@ class UsersController extends \BaseController {
 			$message->to(Input::get('email'), "New user")->subject('Welcome to NotesToMyself');
 		});
 
-		return Redirect::to('login'); // Whats this!?
+		return View::make('generic')
+			->with('title', "Account Created")
+			->with('header', "Account Created")
+			->with('message', "<p>To login, check your email to verify your account.</p>
+							   <button type='button' onclick=\"window.location='/login'\">Login</button>");
 	}
 
 	public function confirm($confirmation_code) {
