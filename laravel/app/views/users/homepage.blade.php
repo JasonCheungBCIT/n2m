@@ -17,8 +17,8 @@
 @section('maincontent')
 
     <div id="wrapper">
-        {{Form::open(['route'=>'notes.store', 'files'=>true, 'method'=>'post'])}}
-            <h2 id="header">{{ $email }} - <span><a href= {{ url('logout') }}>Log out</a></span></h2>
+        {{Form::open(['action'=>'NotesController@store', 'files'=>true])}}
+            <h2 id="header">{{ $email }} - <span>{{ HTML::link('logout', 'Log out') }}</span></h2>
 
             <div id="main_content">
 

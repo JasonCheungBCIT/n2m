@@ -25,7 +25,7 @@ class SessionsController extends \BaseController {
 		if (Auth::check()) {
 			return Redirect::to('mynotes');
 		} else {
-			return View::make('sessions.create');
+			return View::make('sessions/create');
 		}
 	}
 
@@ -124,7 +124,7 @@ class SessionsController extends \BaseController {
 	public function destroy($id = null)
 	{
 		Auth::logout();
-		return Redirect::route('sessions.create'); // Ask to login again.
+		return Redirect::to('login'); // Ask to login again.
 	}
 
 

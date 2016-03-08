@@ -11,7 +11,7 @@
     <div id="main-content-wrapper">
         <h1>Login</h1>
         {{-- Changed default action to post to our collection of students --}}
-        {{Form::open(['route'=>'sessions.store']) }}
+        {{Form::open(['action'=>'SessionsController@store']) }}
         <div>
             {{Form::label('email', 'Email Address: ')}}
             {{Form::text('email')}}

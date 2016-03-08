@@ -182,7 +182,9 @@ class UsersController extends \BaseController {
 		// Validate input
 		$v = Validator::make(Input::all(), ['password'=>'required|confirmed|min:6']);
 		if (!($v->passes())) {
-			return Redirect::back()->withInput()->withErrors($v->messages);
+			// dd("send redirect");
+
+			return Redirect::back()->withInput()->withErrors($v);
 		}
 
 		// Find the first user with the password code
